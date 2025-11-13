@@ -1,0 +1,127 @@
+/* --- Desktop --- */
+body {
+  margin: 0;
+  background-image: url('./fond.png');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  overflow: hidden;
+  font-family: sans-serif;
+}
+
+.book {
+  position: relative;
+  width: 850px;
+  height: 637px;
+  perspective: 2000px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.double-page {
+  position: relative;
+  width: 850px;
+  height: 637px;
+}
+
+.page {
+  position: absolute;
+  width: 425px; /* moitié du livre */
+  height: 637px;
+  top: 0;
+  backface-visibility: hidden;
+  transition: transform 1s ease, z-index 0s linear 1s;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* Page de droite (visible au départ) */
+.page.right {
+  left: 425px; /* à droite */
+  transform-origin: left; /* rotation autour du bord gauche */
+  transform: rotateY(0deg);
+}
+
+/* Page de gauche (cachée au départ) */
+.page.left.back {
+  left: 0; /* à gauche */
+  transform-origin: right; /* rotation autour du bord droit */
+  transform: rotateY(180deg);
+  z-index: 0;
+}
+
+/* Images */
+.page img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Page gauche : on supprime le translateX */
+.page.left.back img {
+  width: 100%; /* largeur de la div (425px) */
+  height: 100%;
+  object-fit: cover;
+  transform: none;
+}
+
+/* Page droite secondaire derrière l'accueil */
+.page.left.front-behind {
+  left: 425px;             /* alignée à droite de la page gauche */
+  top: -1px;
+  width: 420px;
+  height: 638px;
+  position: absolute;
+  z-index: 0;              /* derrière la page droite */
+  transform: rotateY(0deg); /* pas de rotation */
+}
+
+.page.left.front-behind img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- Message rotation mobile --- */
+.rotate-message {
+  display: none; /* caché par défaut */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 1.5rem;
+  text-align: center;
+  padding: 1rem 2rem;
+  background: rgba(0,0,0,0.7);
+  border-radius: 12px;
+  z-index: 999;
+}
+
+/* Mobile portrait : cacher le livre, afficher le message */
+@media (max-width: 1024px) {
+  body.portrait .book {
+    display: none;
+  }
+
+  body.portrait .rotate-message {
+    display: block;
+  }
+
+  body.landscape .book {
+  width: auto;             /* on laisse le calcul automatique */
+  height: 90vh;            /* hauteur = 90% de la hauteur de l'écran */
+  max-width: calc(90vh * (850 / 637)); /* conserve le ratio original 850x637 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+  body.landscape .rotate-message {
+    display: none;
+  }
+}
